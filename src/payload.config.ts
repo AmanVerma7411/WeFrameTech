@@ -1,5 +1,10 @@
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { Workflows } from './collections/Workflows'
+import { WorkflowLogs } from './collections/WorkflowLogs'
+import { Blogs } from './collections/Blogs'
+import { workflowPlugin } from './plugins/workflowPlugin'
+import { workflowEndpoints } from './endpoints/workflows'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -18,7 +23,10 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media],
+  collections: [Users, Media,Workflows, 
+  WorkflowLogs,
+  Blogs],
+endpoints: workflowEndpoints,
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -28,5 +36,5 @@ export default buildConfig({
     url: process.env.DATABASE_URL || '',
   }),
   sharp,
-  plugins: [],
+  plugins: [ workflowPlugin],
 })
