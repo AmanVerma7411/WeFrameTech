@@ -1,50 +1,38 @@
 export const workflowEndpoints = [
-
   // Manual Workflow Trigger
   {
     path: '/workflows/trigger',
     method: 'post',
 
-    handler: async (req: any, res: any) => {
-
+    handler: async (req) => {
       try {
-
-        const { collection, docId } = req.body
+        const { collection, docId } = await req.json()
 
         if (!collection || !docId) {
-          return res.status(400).json({
-            message: 'collection and docId are required'
-          })
+          return Response.json({ message: 'collection and docId are required' }, { status: 400 })
         }
 
         const doc = await req.payload.findByID({
           collection,
-          id: docId
+          id: docId,
         })
 
         if (!doc) {
-          return res.status(404).json({
-            message: 'Document not found'
-          })
+          return Response.json({ message: 'Document not found' }, { status: 404 })
         }
 
-        console.log(`Manual workflow trigger for ${collection} : ${docId}`)
+        console.log(`Manual workflow trigger for ${collection}: ${docId}`)
 
-        return res.json({
+        return Response.json({
           success: true,
-          document: doc
+          document: doc,
         })
-
       } catch (error) {
-
         console.error(error)
 
-        return res.status(500).json({
-          message: 'Workflow trigger failed'
-        })
-
+        return Response.json({ message: 'Workflow trigger failed' }, { status: 500 })
       }
-    }
+    },
   },
 
   // Workflow Status API
@@ -52,35 +40,27 @@ export const workflowEndpoints = [
     path: '/workflows/status/:docId',
     method: 'get',
 
-    handler: async (req: any, res: any) => {
-
+    handler: async (req) => {
       try {
-
-        const docId = req.params.docId
+        const { docId } = req.routeParams
 
         const logs = await req.payload.find({
           collection: 'workflowLogs',
           where: {
             documentId: {
-              equals: docId
-            }
-          }
+              equals: docId,
+            },
+          },
         })
 
-        return res.json({
-          workflowLogs: logs.docs
+        return Response.json({
+          workflowLogs: logs.docs,
         })
-
       } catch (error) {
-
         console.error(error)
 
-        return res.status(500).json({
-          message: 'Failed to fetch workflow status'
-        })
-
+        return Response.json({ message: 'Failed to fetch workflow status' }, { status: 500 })
       }
-    }
-  }
-
+    },
+  },
 ]
