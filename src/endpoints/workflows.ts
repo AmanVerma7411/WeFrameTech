@@ -2,7 +2,7 @@ export const workflowEndpoints = [
   // Manual Workflow Trigger
   {
     path: '/workflows/trigger',
-    method: 'post',
+    method: 'post' as const,
 
     handler: async (req: any) => {
       try {
@@ -38,7 +38,7 @@ export const workflowEndpoints = [
   // Workflow Status API
   {
     path: '/workflows/status/:docId',
-    method: 'get',
+    method: 'get' as const,
 
     handler: async (req: any) => {
       try {
