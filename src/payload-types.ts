@@ -71,6 +71,7 @@ export interface Config {
     media: Media;
     workflows: Workflow;
     workflowLogs: WorkflowLog;
+    contracts: Contract;
     blogs: Blog;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -83,6 +84,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     workflows: WorkflowsSelect<false> | WorkflowsSelect<true>;
     workflowLogs: WorkflowLogsSelect<false> | WorkflowLogsSelect<true>;
+    contracts: ContractsSelect<false> | ContractsSelect<true>;
     blogs: BlogsSelect<false> | BlogsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -129,6 +131,7 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: string;
+  role: 'admin' | 'reviewer';
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -210,6 +213,20 @@ export interface WorkflowLog {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contracts".
+ */
+export interface Contract {
+  id: string;
+  title: string;
+  description?: string | null;
+  workflow?: (string | null) | Workflow;
+  status?: ('draft' | 'progress' | 'approved' | 'rejected') | null;
+  currentStep?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "blogs".
  */
 export interface Blog {
@@ -265,6 +282,10 @@ export interface PayloadLockedDocument {
         value: string | WorkflowLog;
       } | null)
     | ({
+        relationTo: 'contracts';
+        value: string | Contract;
+      } | null)
+    | ({
         relationTo: 'blogs';
         value: string | Blog;
       } | null);
@@ -315,6 +336,7 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -386,6 +408,19 @@ export interface WorkflowLogsSelect<T extends boolean = true> {
   action?: T;
   comment?: T;
   timestamp?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contracts_select".
+ */
+export interface ContractsSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  workflow?: T;
+  status?: T;
+  currentStep?: T;
   updatedAt?: T;
   createdAt?: T;
 }

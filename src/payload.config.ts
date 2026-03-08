@@ -9,7 +9,7 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
-
+import { Contracts } from './collections/Contracts'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 
@@ -19,14 +19,15 @@ const dirname = path.dirname(filename)
 export default buildConfig({
   admin: {
     user: Users.slug,
+    components: {
+      afterNavLinks: ['@/components/UserMenu'],
+    },
     importMap: {
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media,Workflows, 
-  WorkflowLogs,
-  Blogs],
-endpoints: workflowEndpoints,
+  collections: [Users, Media, Workflows, WorkflowLogs, Contracts, Blogs],
+  endpoints: workflowEndpoints,
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -36,5 +37,5 @@ endpoints: workflowEndpoints,
     url: process.env.DATABASE_URL || '',
   }),
   sharp,
-  plugins: [ workflowPlugin],
+  plugins: [workflowPlugin],
 })
