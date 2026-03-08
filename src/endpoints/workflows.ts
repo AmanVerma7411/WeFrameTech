@@ -4,7 +4,7 @@ export const workflowEndpoints = [
     path: '/workflows/trigger',
     method: 'post',
 
-    handler: async (req) => {
+    handler: async (req: any) => {
       try {
         const { collection, docId } = await req.json()
 
@@ -40,7 +40,7 @@ export const workflowEndpoints = [
     path: '/workflows/status/:docId',
     method: 'get',
 
-    handler: async (req) => {
+    handler: async (req: any) => {
       try {
         const { docId } = req.routeParams
 
